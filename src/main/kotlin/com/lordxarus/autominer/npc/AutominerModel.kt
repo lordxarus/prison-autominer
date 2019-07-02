@@ -43,6 +43,7 @@ class AutominerModel(val npc: NPC) : Listener {
         // for show
         it.addEnchantment(Enchantment.DIG_SPEED, 5)
     }
+
     var state = State(MinerState.WAITING, ThoughtState.NO_TARGET, ScanState.NARROW_SCAN)
     var previousState = state
 
@@ -69,6 +70,7 @@ class AutominerModel(val npc: NPC) : Listener {
     lateinit var region: ProtectedRegion
     var player: Player
     lateinit var breaker: BlockBreaker
+
 
     // STATUS WAITING
     // Triggered when a miner is not doing anything at all

@@ -61,11 +61,12 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
         inventoryManager.init()
 
         server.onlinePlayers.stream().forEach {
-            println("HI")
+            println(it.name)
             if (!npcs.containsKey(it)) {
                 val npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Miner")
-                npc.addTrait(AutominerTrait())
                 npcs[it] = npc
+                npc.addTrait(AutominerTrait())
+                getModel(it).load()
             }
         }
 
