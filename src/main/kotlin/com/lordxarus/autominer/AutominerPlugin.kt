@@ -66,8 +66,7 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
                 val npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Miner")
                 npcs[it] = npc
                 npc.addTrait(AutominerTrait())
-                getModel(it).load()
-            }
+                getModel(it).load() }
         }
 
 
@@ -78,7 +77,7 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
             val model = getModel(t)
             model.sellAllItems()
             model.save()
-            (u.destroy())
+            u.destroy()
         }
     }
 
@@ -96,8 +95,10 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
                                 "small" -> item = Items.timeTokenSmall
 
                             }
+                        } else {
+                            item = Items.timeTokenMedium
                         }
-                        sender.inventory.setItem(sender.inventory.firstEmpty(), Items.timeTokenBig)
+                        sender.inventory.setItem(sender.inventory.firstEmpty(), item)
                         sender.updateInventory()
 
                     } else {

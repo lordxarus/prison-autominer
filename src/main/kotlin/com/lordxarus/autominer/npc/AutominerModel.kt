@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import me.mrCookieSlime.QuickSell.Shop
 import net.citizensnpcs.api.npc.NPC
 import net.citizensnpcs.api.trait.trait.Equipment
+import net.md_5.bungee.api.ChatColor
 import net.minecraft.server.v1_8_R3.BlockPosition
 import net.minecraft.server.v1_8_R3.MinecraftServer
 import net.minecraft.server.v1_8_R3.PacketPlayOutAnimation
@@ -188,10 +189,10 @@ class AutominerModel(val npc: NPC) : Listener {
                 MinerState.STUCK -> {
                     val scan = breaker.wideScan()
                     if (scan.isEmpty()) {
-                        player.sendMessage("Miner is stuck or done. Despawning in 5 seconds.")
+                        player.sendMessage("${ChatColor.RED}Miner is stuck or done. Despawning in 5 seconds.")
+                        run = false
                         object : BukkitRunnable() {
                             override fun run() {
-                                run = false
                                 npc.despawn()
                             }
 

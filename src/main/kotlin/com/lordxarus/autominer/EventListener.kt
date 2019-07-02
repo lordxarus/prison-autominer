@@ -53,8 +53,8 @@ class EventListener : Listener {
         val player = e.player
         if (!plugin.npcs.containsKey(player)) {
             val npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Miner")
-            npc.addTrait(AutominerTrait())
             plugin.npcs[player] = npc
+            npc.addTrait(AutominerTrait())
             getModel(player).load()
         }
     }
