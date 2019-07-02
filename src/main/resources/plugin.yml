@@ -1,0 +1,13 @@
+name: AutoMiner
+author: lordxarus
+description: Creates slave copies of you and puts them to work.
+main: com.lordxarus.autominer.AutominerPlugin
+version: 0.0.1
+depend: [WorldEdit, WorldGuard, Citizens, QuickSell]
+commands:
+  am:
+    description: Spawn an autominer
+    usage: /am <name>
+  move:
+    description: fuck
+    usage: /move

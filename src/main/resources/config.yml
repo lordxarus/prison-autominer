@@ -1,0 +1,9 @@
+messages:
+  no-permission: "&4You don't have permission to do that!"
+  no-impl: "&4Feature coming soon!"
+  # not usable
+  sell: ""
+  no-region: "&4You must be standing in a mine to summon your miner!"
+  change-skin: "&aYou've changed your miner skin to "
+  out-of-time: "&4You've run out of time on your miner!"
+  token-applied: "&aAutoMiner token applied! Your new total is "
