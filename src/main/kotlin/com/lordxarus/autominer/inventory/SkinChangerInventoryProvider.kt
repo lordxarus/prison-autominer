@@ -34,6 +34,8 @@ class SkinChangerInventoryProvider: InventoryProvider {
         contents.set(1, 4, createHeadClickable(player, model, "realiBlinky"))
         contents.set(1, 6, createHeadClickable(player, model, "Butterness"))
         contents.set(1, 5, createHeadClickable(player, model, "boreddevforhire"))
+        contents.set(1, 6, createHeadClickable(player, model, "drawlin"))
+        contents.set(1, 7, createHeadClickable(player, model, "SuchLow"))
 
 
         contents.set(3, 4, createBackButtonClickable(player))
