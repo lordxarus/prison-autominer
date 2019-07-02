@@ -65,8 +65,10 @@ class AutominerModel(val npc: NPC) : Listener {
     var run = true
 
     lateinit var shop: Shop
+
     lateinit var region: ProtectedRegion
     var player: Player
+    lateinit var breaker: BlockBreaker
 
     // STATUS WAITING
     // Triggered when a miner is not doing anything at all
@@ -112,6 +114,7 @@ class AutominerModel(val npc: NPC) : Listener {
 
     fun onSpawn() {
         spawnTime = System.currentTimeMillis()
+        breaker = DefaultBlockBreaker(this)
     }
 
     fun run() {
@@ -132,7 +135,7 @@ class AutominerModel(val npc: NPC) : Listener {
                     if (state.thoughtState == ThoughtState.NO_TARGET) {
 
                         if (state.scanState == ScanState.WIDE_SCAN) {
-                            val wideScan = wideScan()
+                            val wideScan = breaker.wideScan()
                             if (wideScan.size > 0) {
                                 target = getClosest(wideScan)
                                 if (target!!.location.distance(npc.entity.location.block.location) >= armReach) {
@@ -145,7 +148,7 @@ class AutominerModel(val npc: NPC) : Listener {
                                 updateState(state.also { it.minerState = MinerState.STUCK })
                             }
                         } else if (state.scanState == ScanState.NARROW_SCAN) {
-                            val candidate = getClosest(narrowScan())
+                            val candidate = getClosest(breaker.narrowScan())
                             if (candidate == null) {
                                 updateState(State(MinerState.WAITING, ThoughtState.NO_TARGET, ScanState.WIDE_SCAN))
                             } else {
@@ -181,7 +184,7 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
 
                 MinerState.STUCK -> {
-                    val scan = wideScan()
+                    val scan = breaker.wideScan()
                     if (scan.isEmpty()) {
                         player.sendMessage("Miner is stuck or done. Despawning in 5 seconds.")
                         object : BukkitRunnable() {
@@ -192,7 +195,7 @@ class AutominerModel(val npc: NPC) : Listener {
 
                         }.runTaskLater(plugin, (5 * MinecraftServer.getServer().recentTps[0]).toLong())
                     } else {
-                        val blocks = wideScan().filter { it != target }
+                        val blocks = breaker.wideScan().filter { it != target }
                         target = blocks[rand.nextInt(blocks.size)]
                         updateState(State(MinerState.WALKING, ThoughtState.FAR_TARGET, ScanState.NARROW_SCAN))
                     }
@@ -209,27 +212,12 @@ class AutominerModel(val npc: NPC) : Listener {
     }
 
     /**
-     * @desc Widescan will scan blocks around the miner for the appropriate block types in a defined radius
-     * @desc Use it to find a suitable block to walk to
+     * Scan will scan blocks around the miner in the appropriate region in a defined radius
+     *
+     * Use it to find a suitable block to walk to
      */
-    fun scan(range: IntRange, checkLos: Boolean): ArrayList<Block> {
-        val los by lazy { getLineOfSight() }
-        val result = ArrayList<Block>()
-        for (i in range) {
-            for (j in -armReach..armReach) {
-                for (k in range) {
-                    val block = npc.entity.location.block.getRelative(i, j, k)
-                    if (region.contains(block.x, block.y, block.z) && block.type != Material.AIR) {
-                        result.add(block)
-                    }
-                }
-            }
-        }
 
-        return result
-    }
-
-    fun clearBlocked() {
+    private fun clearBlocked() {
         val blocks = ArrayList<Block>()
         for (i in -1..1) {
             for (j in -1..1) {
@@ -241,21 +229,6 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
             }
         }
-    }
-
-    fun wideScan(): ArrayList<Block> {
-        return scan(wideScanRange, false)
-    }
-
-    fun narrowScan(): ArrayList<Block> {
-        return scan(narrowScanRange, false)
-    }
-
-    fun getLineOfSight(): List<Block> {
-        val entity = npc.entity as Player
-        val blocks = arrayListOf<Block>()
-
-        return entity.getLineOfSight(setOf(Material.AIR), wideScanRadius)
     }
 
     fun getClosest(blocks: ArrayList<Block>): Block? {

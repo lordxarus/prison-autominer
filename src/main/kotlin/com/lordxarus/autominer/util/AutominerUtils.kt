@@ -31,15 +31,6 @@ fun getMineRegions(loc: Location): List<ProtectedRegion> {
     return getWorldGuardRegions(loc).regions.filter { it.id.contains("-am-") }
 }
 
-fun getShopFromWorldGuard(model: AutominerModel): Shop? {
-    val npc = model.npc
-    val regions = getWorldGuardRegions(npc.entity.location)
-    if (regions.regions.isNotEmpty()) {
-        return Shop.getShop(regions.regions.stream().findFirst().get().id)
-    }
-    return null
-}
-
 fun getShopFromWorldGuard(loc: Location): Shop? {
     val regions = getMineRegions(loc)
     if (regions.isNotEmpty()) {
