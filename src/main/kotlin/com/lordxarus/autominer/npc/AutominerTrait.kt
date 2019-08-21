@@ -5,18 +5,16 @@ import com.lordxarus.autominer.util.plugin
 import net.citizensnpcs.api.event.NPCLeftClickEvent
 import net.citizensnpcs.api.event.NPCRightClickEvent
 import net.citizensnpcs.api.trait.Trait
-import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 
 
 class AutominerTrait: Trait("automine") {
 
     val autominerModel by lazy { AutominerModel(npc) }
-    lateinit var player: Player
 
     override fun onSpawn() {
-        autominerModel.reset()
         autominerModel.onSpawn()
+        autominerModel.reset()
     }
 
     override fun onDespawn() {

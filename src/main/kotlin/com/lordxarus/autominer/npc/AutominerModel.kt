@@ -38,30 +38,32 @@ import kotlin.random.Random
  */
 class AutominerModel(val npc: NPC) : Listener {
 
+    val player by lazy { plugin.npcs.entries.filter { it.value == npc }[0].key }
     val rand = Random
+
     val tool = ItemStack(Material.DIAMOND_PICKAXE).also {
         it.amount = 1
         // for show
         it.addEnchantment(Enchantment.DIG_SPEED, 5)
     }
-
     var state = State(MinerState.WAITING, ThoughtState.NO_TARGET, ScanState.NARROW_SCAN)
+
     var previousState = state
-
     var successRate = .8
+
     var armReach = 2
-
     var wideScanRadius = 100
-    val wideScanRange = -(wideScanRadius)..(wideScanRadius)
 
+    val wideScanRange = -(wideScanRadius)..(wideScanRadius)
     val narrowScanRange = -(armReach)..(armReach)
+
     var target: Block? = null
 
     val mined = arrayListOf<ItemStack>()
-
     var timeLeft = 0
-    var spawnTime = 0L
 
+
+    var spawnTime = 0L
 
     // only needed because whenever we try to despawn the NPC it still loads and gives an NPE for a tick
     var run = true
@@ -69,7 +71,6 @@ class AutominerModel(val npc: NPC) : Listener {
     lateinit var shop: Shop
 
     lateinit var region: ProtectedRegion
-    lateinit var player: Player
     lateinit var breaker: BlockBreaker
 
 
@@ -112,12 +113,12 @@ class AutominerModel(val npc: NPC) : Listener {
 
     init {
         npc.getTrait(Equipment::class.java).set(Equipment.EquipmentSlot.HAND, tool)
-        player = plugin.npcs.filter { entry: Map.Entry<Player, NPC> -> entry.value == npc }.iterator().next().key
     }
 
     fun onSpawn() {
-        spawnTime = System.currentTimeMillis()
+        region = getWorldGuardRegions(npc.storedLocation).filter { it.id.contains("-am-") }[0]
         breaker = DefaultBlockBreaker(this)
+        spawnTime = System.currentTimeMillis()
     }
 
     fun run() {

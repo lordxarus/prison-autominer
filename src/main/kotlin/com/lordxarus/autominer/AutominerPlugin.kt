@@ -66,10 +66,9 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
                 val npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Miner")
                 npcs[it] = npc
 
-                val trait = AutominerTrait().also { trait -> trait.player = it }
-                trait.player = it
-
+                val trait = AutominerTrait()
                 npc.addTrait(trait)
+
                 getModel(it).loadConfig()
             }
         }

@@ -29,14 +29,17 @@ class SkinChangerInventoryProvider: InventoryProvider {
         contents.fill(ClickableItem.empty(ItemStack(Material.STAINED_GLASS_PANE, 1, 11.toShort())))
 
         contents.set(1, 1, createHeadClickable(player, model, "Miner"))
-        contents.set(1, 2, createHeadClickable(player, model, "Smaxy"))
-        contents.set(1, 3, createHeadClickable(player, model, "140k"))
-        contents.set(1, 4, createHeadClickable(player, model, "realiBlinky"))
-        contents.set(1, 6, createHeadClickable(player, model, "Butterness"))
-        contents.set(1, 5, createHeadClickable(player, model, "boreddevforhire"))
-        contents.set(1, 6, createHeadClickable(player, model, "drawlin"))
-        contents.set(1, 7, createHeadClickable(player, model, "SuchLow"))
-        contents.set(2, 1, createHeadClickable(player, model, "ProperGent"))
+        contents.set(1, 2, createHeadClickable(player, model, "BeaverXSwordz"))
+        contents.set(1, 3, createHeadClickable(player, model, "boreddevforhire"))
+        contents.set(1, 4, createHeadClickable(player, model, "CinemaXSwordz"))
+        contents.set(1, 6, createHeadClickable(player, model, "GeXyd"))
+        contents.set(1, 5, createHeadClickable(player, model, "iAbide"))
+        contents.set(1, 6, createHeadClickable(player, model, "ItsAndromenda"))
+        contents.set(1, 7, createHeadClickable(player, model, "Maxyo"))
+        contents.set(2, 1, createHeadClickable(player, model, "MiniLaddd"))
+        contents.set(2, 2, createHeadClickable(player, model, "Notch"))
+        contents.set(2, 3, createHeadClickable(player, model, "Poptartersauce"))
+        contents.set(2, 4, createHeadClickable(player, model, "sub2pewdiepie212"))
 
 
 
