@@ -36,6 +36,8 @@ class SkinChangerInventoryProvider: InventoryProvider {
         contents.set(1, 5, createHeadClickable(player, model, "boreddevforhire"))
         contents.set(1, 6, createHeadClickable(player, model, "drawlin"))
         contents.set(1, 7, createHeadClickable(player, model, "SuchLow"))
+        contents.set(2, 1, createHeadClickable(player, model, "ProperGent"))
+
 
 
         contents.set(3, 4, createBackButtonClickable(player))

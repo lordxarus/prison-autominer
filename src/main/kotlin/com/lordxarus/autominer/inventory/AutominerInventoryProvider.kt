@@ -7,6 +7,7 @@ import fr.minuskube.inv.ClickableItem
 import fr.minuskube.inv.content.InventoryContents
 import fr.minuskube.inv.content.InventoryProvider
 import fr.minuskube.inv.content.SlotPos
+import me.clip.autosell.AutoSellAPI
 import net.md_5.bungee.api.ChatColor.*
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -147,7 +148,7 @@ class AutominerInventoryProvider: InventoryProvider {
                 if (model.npc.isSpawned) {
                     model.npc.despawn()
                 } else {
-                    if (isLocInAnyShop(player.location)) {
+                    if (AutoSellAPI.hasShop(player)) {
                         if (model.timeLeft > 0) {
                             model.npc.spawn(player.location)
                         } else {

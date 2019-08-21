@@ -69,7 +69,7 @@ class AutominerModel(val npc: NPC) : Listener {
     lateinit var shop: Shop
 
     lateinit var region: ProtectedRegion
-    var player: Player
+    lateinit var player: Player
     lateinit var breaker: BlockBreaker
 
 
@@ -324,7 +324,7 @@ class AutominerModel(val npc: NPC) : Listener {
         mined.clear()
     }
 
-    fun save() {
+    fun saveConfig() {
         val file = File("plugins/AutoMiner/${player.name}")
         if (!file.exists()) {
             file.createNewFile()
@@ -337,7 +337,7 @@ class AutominerModel(val npc: NPC) : Listener {
         stream.close()
     }
 
-    fun load() {
+    fun loadConfig() {
         val file = File("plugins/AutoMiner/${player.name}")
         if (file.exists()) {
             val sc = Scanner(file)

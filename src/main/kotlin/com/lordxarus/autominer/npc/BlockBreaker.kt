@@ -6,7 +6,7 @@ import java.util.*
 
 abstract class BlockBreaker(private val model: AutominerModel) {
 
-    abstract fun narrowScan(): ArrayList<Block>
+   abstract fun narrowScan(): ArrayList<Block>
 
     fun wideScan(): ArrayList<Block> {
         return scan(model.wideScanRange)

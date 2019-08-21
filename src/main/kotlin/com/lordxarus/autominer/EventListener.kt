@@ -55,14 +55,14 @@ class EventListener : Listener {
             val npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Miner")
             plugin.npcs[player] = npc
             npc.addTrait(AutominerTrait())
-            getModel(player).load()
+            getModel(player).loadConfig()
         }
     }
 
     @EventHandler
     fun onDisconnect(e: PlayerQuitEvent) {
         val model = getModel(e.player)
-        model.save()
+        model.saveConfig()
         model.npc.destroy()
     }
 

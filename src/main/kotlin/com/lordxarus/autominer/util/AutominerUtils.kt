@@ -32,6 +32,7 @@ fun getMineRegions(loc: Location): List<ProtectedRegion> {
 }
 
 fun getShopFromWorldGuard(loc: Location): Shop? {
+
     val regions = getMineRegions(loc)
     if (regions.isNotEmpty()) {
         return Shop.getShop(regions[0].id.replace("-am-", ""))
