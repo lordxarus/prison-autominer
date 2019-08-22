@@ -192,8 +192,9 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
 
                 MinerState.STUCK -> {
-                    val scan = breaker.scan(wideScanRange, 0..20)
+                    var scan = breaker.wideScan()
                     if (scan.isEmpty()) {
+                        scan = breaker.scan(wideScanRange, 0..20)
                         if (scan.isEmpty()) {
                             player.sendMessage("${ChatColor.RED}Miner is stuck or done. Despawning in 5 seconds.")
                             run = false
@@ -204,12 +205,12 @@ class AutominerModel(val npc: NPC) : Listener {
 
                             }.runTaskLater(plugin, (5 * MinecraftServer.getServer().recentTps[0]).toLong())
                         } else {
-                            target = scan[rand.nextInt(scan.size)]
+                            target = getClosest(scan)
                             updateState(State(MinerState.MINING, ThoughtState.CLOSE_TARGET, ScanState.NARROW_SCAN))
                         }
                     } else {
                         val blocks = breaker.wideScan().filter { it != target }
-                        target = blocks[rand.nextInt(blocks.size)]
+                        target = getClosest(blocks)
                         updateState(State(MinerState.WALKING, ThoughtState.FAR_TARGET, ScanState.NARROW_SCAN))
                     }
 
@@ -244,8 +245,8 @@ class AutominerModel(val npc: NPC) : Listener {
         }
     }
 
-    fun getClosest(blocks: ArrayList<Block>): Block? {
-        return if (blocks.size > 0) {
+    fun getClosest(blocks: List<Block>): Block? {
+        return if (blocks.isNotEmpty()) {
             var best: Block = blocks[0]
             blocks.forEach {
                 if (best.location.distance(npc.entity.location.block.location) > it.location.distance(npc.entity.location.block.location)) best = it }
