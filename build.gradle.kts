@@ -1,5 +1,5 @@
 group = "com.lordxarus"
-version = "1.0.0"
+version = "1.1.0"
 
 var kotlinVersion = "1.3.21"
 

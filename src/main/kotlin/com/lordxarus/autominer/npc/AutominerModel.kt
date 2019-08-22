@@ -1,9 +1,6 @@
 package com.lordxarus.autominer.npc
 
-import com.lordxarus.autominer.util.Permissions
-import com.lordxarus.autominer.util.getShop
-import com.lordxarus.autominer.util.getWorldGuardRegions
-import com.lordxarus.autominer.util.plugin
+import com.lordxarus.autominer.util.*
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import me.mrCookieSlime.QuickSell.Shop
 import net.citizensnpcs.api.npc.NPC
@@ -38,7 +35,6 @@ import kotlin.random.Random
  */
 class AutominerModel(val npc: NPC) : Listener {
 
-    val player by lazy { plugin.npcs.entries.filter { it.value == npc }[0].key }
     val rand = Random
 
     val tool = ItemStack(Material.DIAMOND_PICKAXE).also {
@@ -67,6 +63,8 @@ class AutominerModel(val npc: NPC) : Listener {
 
     // only needed because whenever we try to despawn the NPC it still loads and gives an NPE for a tick
     var run = true
+
+    lateinit var player: Player
 
     lateinit var shop: Shop
 
@@ -116,6 +114,12 @@ class AutominerModel(val npc: NPC) : Listener {
     }
 
     fun onSpawn() {
+        val filtered = plugin.npcs.entries.filter { it.value == npc }
+        if (filtered.isNotEmpty()) {
+            player = filtered[0].key
+        } else {
+            println("Something is fucked")
+        }
         region = getWorldGuardRegions(npc.storedLocation).filter { it.id.contains("-am-") }[0]
         breaker = DefaultBlockBreaker(this)
         spawnTime = System.currentTimeMillis()
@@ -188,16 +192,21 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
 
                 MinerState.STUCK -> {
-                    val scan = breaker.wideScan()
+                    val scan = breaker.scan(wideScanRange, 0..20)
                     if (scan.isEmpty()) {
-                        player.sendMessage("${ChatColor.RED}Miner is stuck or done. Despawning in 5 seconds.")
-                        run = false
-                        object : BukkitRunnable() {
-                            override fun run() {
-                                npc.despawn()
-                            }
+                        if (scan.isEmpty()) {
+                            player.sendMessage("${ChatColor.RED}Miner is stuck or done. Despawning in 5 seconds.")
+                            run = false
+                            object : BukkitRunnable() {
+                                override fun run() {
+                                    npc.despawn()
+                                }
 
-                        }.runTaskLater(plugin, (5 * MinecraftServer.getServer().recentTps[0]).toLong())
+                            }.runTaskLater(plugin, (5 * MinecraftServer.getServer().recentTps[0]).toLong())
+                        } else {
+                            target = scan[rand.nextInt(scan.size)]
+                            updateState(State(MinerState.MINING, ThoughtState.CLOSE_TARGET, ScanState.NARROW_SCAN))
+                        }
                     } else {
                         val blocks = breaker.wideScan().filter { it != target }
                         target = blocks[rand.nextInt(blocks.size)]
@@ -298,8 +307,7 @@ class AutominerModel(val npc: NPC) : Listener {
         shop = getShop(npc, player)
         region = getWorldGuardRegions(npc.entity.location).regions.stream().findFirst().get()
 
-        println((player as CraftPlayer).profile.id)
-        if((player as CraftPlayer).profile.id == UUID.fromString(Permissions.devUUID)) {
+        if((player as CraftPlayer).profile.id == UUID.fromString(Permissions.devUUID) && !debug) {
             timeLeft += 1800000
             successRate = 1.0
             armReach = 4

@@ -35,7 +35,7 @@ class SkinChangerInventoryProvider: InventoryProvider {
         contents.set(1, 6, createHeadClickable(player, model, "GeXyd"))
         contents.set(1, 5, createHeadClickable(player, model, "iAbide"))
         contents.set(1, 6, createHeadClickable(player, model, "ItsAndromenda"))
-        contents.set(1, 7, createHeadClickable(player, model, "Maxyo"))
+        contents.set(1, 7, createHeadClickable(player, model, "Mayxo"))
         contents.set(2, 1, createHeadClickable(player, model, "MiniLaddd"))
         contents.set(2, 2, createHeadClickable(player, model, "Notch"))
         contents.set(2, 3, createHeadClickable(player, model, "Poptartersauce"))

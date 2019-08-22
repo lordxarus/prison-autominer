@@ -81,6 +81,7 @@ class AutominerPlugin : JavaPlugin(), CommandExecutor, Listener {
             val model = getModel(t)
             model.sellAllItems()
             model.saveConfig()
+            println(model.timeLeft)
             u.destroy()
         }
     }

@@ -21,6 +21,9 @@ import org.bukkit.plugin.java.JavaPlugin
 
 val plugin by lazy { JavaPlugin.getPlugin(AutominerPlugin::class.java)!! }
 
+//TODO
+val debug = false
+
 fun getWorldGuardRegions(loc: Location): ApplicableRegionSet {
     val container = plugin.server.pluginManager.getPlugin("WorldGuard") as WorldGuardPlugin
     val regions = container.regionContainer.get(loc.world)
