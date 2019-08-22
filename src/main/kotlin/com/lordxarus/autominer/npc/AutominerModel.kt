@@ -111,15 +111,15 @@ class AutominerModel(val npc: NPC) : Listener {
 
     init {
         npc.getTrait(Equipment::class.java).set(Equipment.EquipmentSlot.HAND, tool)
-    }
-
-    fun onSpawn() {
         val filtered = plugin.npcs.entries.filter { it.value == npc }
         if (filtered.isNotEmpty()) {
             player = filtered[0].key
         } else {
             println("Something is fucked")
         }
+    }
+
+    fun onSpawn() {
         region = getWorldGuardRegions(npc.storedLocation).filter { it.id.contains("-am-") }[0]
         breaker = DefaultBlockBreaker(this)
         spawnTime = System.currentTimeMillis()
