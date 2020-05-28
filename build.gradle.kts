@@ -4,13 +4,8 @@ version = "1.0.1"
 var kotlinVersion = "1.3.31"
 
 plugins {
-    `java-library`
-    `kotlin-dsl`
-    kotlin("jvm") version "1.3.31"
-
-    maven
-    
-
+    kotlin("jvm") version "1.3.61"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 java {
@@ -60,10 +55,12 @@ val fatJar = task("fatJar", type = Jar::class) {
             .filter { include.contains(it.name) }
             .map { if (it.isDirectory) it else zipTree(it) })
     with(tasks.jar.get() as CopySpec)
+
+
 }
 
 tasks {
-    "build" {
-        dependsOn(fatJar)
+    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+        minimize {}
     }
 }
