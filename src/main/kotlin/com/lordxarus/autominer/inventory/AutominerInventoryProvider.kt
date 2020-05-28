@@ -14,7 +14,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.time.Duration
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 
@@ -90,7 +89,7 @@ class AutominerInventoryProvider: InventoryProvider {
                     "${DARK_GRAY}―off your mined blocks!―",
                     "",
                     "${GRAY}Blocks: $YELLOW${model.getTotalBlocksMined()}",
-                    "${GRAY}Price: $YELLOW$${getTotalPrice(model, getShop(model.npc, player)).roundToInt()}",
+                    "${GRAY}Price: $YELLOW$${addCommas(getTotalPrice(model, getShop(model.npc, player)))}",
                     "",
                     "$AQUA>> Click to claim!"
             )
@@ -106,7 +105,8 @@ class AutominerInventoryProvider: InventoryProvider {
 
                 val shop = getShop(model.npc, player)
 
-                player.sendMessage("${GREEN}Sold off ${model.getTotalBlocksMined()} blocks for: $${getTotalPrice(model, shop)}")
+                player.sendMessage("${GREEN}Sold off ${model.getTotalBlocksMined()} blocks for: $${addCommas(getTotalPrice(model, shop))}")
+
                 model.sellAllItems()
 
                 // todo

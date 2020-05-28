@@ -1,12 +1,12 @@
 group = "com.lordxarus"
-version = "1.1.0"
+version = "1.0.1"
 
-var kotlinVersion = "1.3.21"
+var kotlinVersion = "1.3.31"
 
 plugins {
     `java-library`
     `kotlin-dsl`
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.31"
 
     maven
     

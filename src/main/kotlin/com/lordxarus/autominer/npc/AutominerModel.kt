@@ -64,6 +64,8 @@ class AutominerModel(val npc: NPC) : Listener {
     // only needed because whenever we try to despawn the NPC it still loads and gives an NPE for a tick
     var run = true
 
+    var upwardMining = false
+
     lateinit var player: Player
 
     lateinit var shop: Shop
@@ -120,14 +122,14 @@ class AutominerModel(val npc: NPC) : Listener {
     }
 
     fun onSpawn() {
-        region = getWorldGuardRegions(npc.storedLocation).filter { it.id.contains("-am-") }[0]
+        region = getMineRegions(npc.storedLocation)[0]
         breaker = DefaultBlockBreaker(this)
         spawnTime = System.currentTimeMillis()
     }
 
     fun run() {
         if (run && npc.isSpawned) {
-            if ((timeLeft < (System.currentTimeMillis() - spawnTime))) {
+            if (((timeLeft - 1000) < (System.currentTimeMillis() - spawnTime))) {
                 timeLeft = 0
                 player.sendMessage(plugin.messages.outOfTime)
                 npc.despawn()
@@ -170,7 +172,7 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
 
                 MinerState.WALKING -> {
-                    if (target!!.location.distance(npc.entity.location) > armReach) {
+                    if (target!!.location.distance(npc.entity.location) > armReach || upwardMining) {
                         if (!npc.navigator.isNavigating) {
                             if (previousState != state) {
                                 npc.navigator.setTarget(target!!.location)
@@ -192,6 +194,7 @@ class AutominerModel(val npc: NPC) : Listener {
                 }
 
                 MinerState.STUCK -> {
+                    // widescan with normal y value
                     var scan = breaker.wideScan()
                     if (scan.isEmpty()) {
                         scan = breaker.scan(wideScanRange, 0..20)
@@ -206,7 +209,8 @@ class AutominerModel(val npc: NPC) : Listener {
                             }.runTaskLater(plugin, (5 * MinecraftServer.getServer().recentTps[0]).toLong())
                         } else {
                             target = getClosest(scan)
-                            updateState(State(MinerState.MINING, ThoughtState.CLOSE_TARGET, ScanState.NARROW_SCAN))
+                            updateState(State(MinerState.WALKING, ThoughtState.FAR_TARGET, ScanState.NARROW_SCAN))
+                            upwardMining = true
                         }
                     } else {
                         val blocks = breaker.wideScan().filter { it != target }
@@ -307,6 +311,7 @@ class AutominerModel(val npc: NPC) : Listener {
         run = true
         shop = getShop(npc, player)
         region = getWorldGuardRegions(npc.entity.location).regions.stream().findFirst().get()
+        upwardMining = false
 
         if((player as CraftPlayer).profile.id == UUID.fromString(Permissions.devUUID) && !debug) {
             timeLeft += 1800000
@@ -335,16 +340,18 @@ class AutominerModel(val npc: NPC) : Listener {
     }
 
     fun saveConfig() {
-        val file = File("plugins/AutoMiner/${player.name}")
-        if (!file.exists()) {
-            file.createNewFile()
-        } else {
-            file.delete()
-            file.createNewFile()
+        if (timeLeft != 0) {
+            val file = File("plugins/AutoMiner/${player.name}")
+            if (!file.exists()) {
+                file.createNewFile()
+            } else {
+                file.delete()
+                file.createNewFile()
+            }
+            val stream = file.outputStream()
+            stream.write("$timeLeft".toByteArray())
+            stream.close()
         }
-        val stream = file.outputStream()
-        stream.write("$timeLeft".toByteArray())
-        stream.close()
     }
 
     fun loadConfig() {

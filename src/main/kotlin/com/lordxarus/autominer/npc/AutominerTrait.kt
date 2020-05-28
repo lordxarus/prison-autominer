@@ -19,6 +19,7 @@ class AutominerTrait: Trait("automine") {
 
     override fun onDespawn() {
         autominerModel.run = false
+        autominerModel.saveConfig()
     }
 
     override fun run() {

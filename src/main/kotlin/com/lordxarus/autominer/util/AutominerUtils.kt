@@ -49,7 +49,7 @@ fun isLocInAnyShop(loc: Location) = getShopFromWorldGuard(loc) != null
 fun getTotalPrice(model: AutominerModel, shop: Shop): Double {
     var priceTotal = 0.0
     model.mined.forEach { priceTotal += shop.prices.getPrice(it) }
-    return priceTotal
+    return priceTotal * 20
 }
 
 fun getModel(player: Player): AutominerModel {
@@ -99,7 +99,7 @@ fun addPermissionLore(item: ItemStack, player: Player, permission: String) {
     ))
 }
 
-fun setItemFlags(meta: ItemMeta){
+fun setItemFlags(meta: ItemMeta) {
     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_ENCHANTS)
 }
 
@@ -109,3 +109,33 @@ fun setHeadOwner(item: ItemStack, owner: String) {
     item.itemMeta = meta
 }
 
+fun addCommas(d: Double): String {
+    val num = d.toInt()
+    val out = StringBuilder(num.toString())
+    if (countDigits(num) > 3) {
+        println(countDigits(num))
+        for (i in countDigits(num) downTo 0) {
+            println("Index: $i")
+            println("Rem: ${i.rem(3)}")
+            val cand = ((countDigits(num) - i))
+            if ((cand.rem(3)) == 0 && cand != 0) {
+                println("asdf")
+                out.insert(i, ",")
+            }
+        }
+    }
+    println(out.toString())
+    return out.toString()
+}
+
+fun countDigits(num: Int): Int {
+    var i = num
+    var count = 0
+    while(i != 0) {
+        i /= 10
+        count++
+    }
+    println("Counts: $count")
+    println("Number: $num")
+    return count
+}
